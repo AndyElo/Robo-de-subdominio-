@@ -1,33 +1,149 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
-<title>Portal de Acceso</title>
-<link rel="stylesheet" href="style.css">
+<title>Secure Access Portal</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    background:black;
+    font-family: "Courier New", monospace;
+    overflow:hidden;
+}
+
+/* Canvas Matrix */
+canvas{
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+/* Login container */
+
+.login-box{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(0,0,0,0.8);
+    border:1px solid #ff0000;
+    padding:40px;
+    width:320px;
+    text-align:center;
+    box-shadow:0 0 20px #ff0000;
+}
+
+.login-box h2{
+    color:#ff0000;
+    margin-bottom:20px;
+}
+
+.login-box input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    background:black;
+    border:1px solid #ff0000;
+    color:#ff0000;
+}
+
+.login-box button{
+    width:100%;
+    padding:10px;
+    background:#ff0000;
+    border:none;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.login-box button:hover{
+    background:#990000;
+}
+
+/* warning text */
+
+.warning{
+    color:#ff5555;
+    font-size:12px;
+    margin-top:10px;
+}
+
+</style>
 </head>
 
 <body>
 
+<canvas id="matrix"></canvas>
+
 <div class="login-box">
 
-<h2>Portal de Acceso</h2>
+<h2>SECURE ACCESS</h2>
 
-<form id="loginForm">
+<form>
 
-<input type="text" id="user" placeholder="Usuario" required>
+<input type="text" placeholder="Username">
 
-<input type="password" id="pass" placeholder="Contraseña" required>
+<input type="password" placeholder="Password">
 
-<button type="submit">Iniciar sesión</button>
+<button type="submit">LOGIN</button>
 
 </form>
 
-<p id="status"></p>
+<div class="warning">
+Authorized Personnel Only
+</div>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "01";
+const matrix = letters.split("");
+
+const font_size = 14;
+const columns = canvas.width / font_size;
+
+const drops = [];
+
+for(let x = 0; x < columns; x++)
+drops[x] = 1;
+
+function draw(){
+
+ctx.fillStyle = "rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle = "#ff0000";
+ctx.font = font_size + "px monospace";
+
+for(let i = 0; i < drops.length; i++){
+
+const text = matrix[Math.floor(Math.random()*matrix.length)];
+
+ctx.fillText(text, i*font_size, drops[i]*font_size);
+
+if(drops[i]*font_size > canvas.height && Math.random() > 0.975)
+drops[i] = 0;
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,33);
+
+</script>
 
 </body>
 </html>
